@@ -5,13 +5,15 @@ edition = "2021"
 
 [dependencies]
 anyhow.workspace = true
-
+semver.workspace = true
 log.workspace = true
+regex.workspace = true
 
 tokio.workspace = true
 reqwest.workspace = true
 
 web3.workspace = true
+
 
 [dev-dependencies]
 env_logger.workspace = true

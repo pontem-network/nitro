@@ -1558,7 +1558,9 @@ dependencies = [
  "anyhow",
  "env_logger",
  "log",
+ "regex",
  "reqwest",
+ "semver",
  "tokio",
  "web3",
 ]
