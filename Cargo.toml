@@ -1,0 +1,53 @@
+[workspace]
+resolver = "2"
+
+members = [
+    "test-infra",
+]
+
+# All workspace members should inherit these keys
+# for package declarations.
+[workspace.package]
+authors = []
+edition = "2021"
+homepage = "https://pontem.network"
+license = "Apache-2.0"
+publish = false
+repository = "https://github.com/pontem-network/nitro"
+rust-version = "1.64"
+
+[workspace.dependencies]
+anyhow = "1.0.72"
+
+env_logger = "0.10.0"
+log = "0.4.19"
+
+tokio = { version = "1.21.0", features = ["full"] }
+reqwest = { version = "0.11.11", features = ["cookies", "json", "stream"] }
+
+web3 = "0.19.0"
+
+[profile.release]
+debug = true
+overflow-checks = true
+
+# The performance build is not currently recommended
+# for production deployments. It has not been widely tested.
+[profile.performance]
+inherits = "release"
+opt-level = 3
+debug = true
+overflow-checks = true
+lto = true
+codegen-units = 1
+
+[profile.cli]
+inherits = "release"
+debug = false
+opt-level = "z"
+lto = true
+strip = true
+codegen-units = 1
+
+[profile.bench]
+debug = true

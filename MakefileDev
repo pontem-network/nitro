@@ -1,0 +1,2 @@
+test__local_nitro_sol:
+	RUST_LOG=debug cargo test -p test-infra --features testing_local_nitro_sol

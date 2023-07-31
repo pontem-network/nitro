@@ -1,0 +1,26 @@
+[package]
+name = "test-infra"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow.workspace = true
+
+log.workspace = true
+
+tokio.workspace = true
+reqwest.workspace = true
+
+web3.workspace = true
+
+[dev-dependencies]
+env_logger.workspace = true
+
+[features]
+testing_local_nitro_sol = []
+
+[[test]]
+name = "node_eth"
+path = "tests/local_nitro_sol.rs"
+harness = false
+required-features = ["testing_local_nitro_sol"]
