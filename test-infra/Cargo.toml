@@ -8,6 +8,7 @@ anyhow.workspace = true
 semver.workspace = true
 log.workspace = true
 regex.workspace = true
+rand.workspace = true
 
 tokio.workspace = true
 reqwest.workspace = true
@@ -17,6 +18,7 @@ web3.workspace = true
 
 [dev-dependencies]
 env_logger.workspace = true
+mimicaw.workspace = true
 
 [features]
 testing_local_nitro_sol = []

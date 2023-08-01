@@ -1,9 +1,8 @@
-use anyhow::{anyhow, bail, ensure, Result};
+use anyhow::{anyhow, ensure, Result};
 use log::{debug, error};
 use regex::Regex;
 use semver::{Version, VersionReq};
 use std::str::FromStr;
-use web3::helpers::to_string;
 
 /// Version solc "0.8.19" is expected
 ///

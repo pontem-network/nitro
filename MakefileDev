@@ -1,2 +1,11 @@
 test__local_nitro_sol:
 	RUST_LOG=debug cargo test -p test-infra --features testing_local_nitro_sol
+
+docker-compose__up:
+	cd nitro-testnode; ./test-node.bash --dev
+
+docker-compose__down:
+	cd nitro-testnode; docker-compose down
+
+docker-compose__address:
+	docker-compose run scripts print-address
