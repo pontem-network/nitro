@@ -37,9 +37,12 @@ use test_infra::solc::check_solc;
 
 mod eth;
 mod mimicaw_helper;
+mod sol;
+mod tmpdir;
 
 use crate::eth::{new_account, root_account, unlock};
 use crate::mimicaw_helper::TestHandleResultToOutcom;
+use crate::tmpdir::TmpDir;
 
 const L1_ADDRESS: &str = "0x3f1Eae7D46d88F08fc2F8ed27FCb2AB183EB2d0E";
 
@@ -62,10 +65,14 @@ async fn main() -> Result<()> {
     // tests
     let args = Args::from_env().unwrap_or_else(|st| st.exit());
 
-    let tests: Vec<Test<TestFn>> =
-        vec![Test::<TestFn>::test("node_eth::create_new_account", || {
+    let tests: Vec<Test<TestFn>> = vec![
+        Test::<TestFn>::test("node_eth::create_new_account", || {
             task::spawn(async { create_new_account().await })
-        })];
+        }),
+        Test::<TestFn>::test("node_eth::deploy_contract", || {
+            task::spawn(async { deploy_contract().await })
+        }),
+    ];
 
     mimicaw::run_tests(&args, tests, |_, test_fn: TestFn| {
         let handle = test_fn();
@@ -82,4 +89,11 @@ async fn create_new_account() -> Result<()> {
     new_account(&client, root_account_address).await?;
 
     Ok(())
+}
+
+async fn deploy_contract() -> Result<()> {
+    let dir = TmpDir::new()?;
+    dbg!(&dir);
+
+    todo!()
 }
