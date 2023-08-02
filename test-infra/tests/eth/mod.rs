@@ -22,15 +22,16 @@ pub(crate) async fn root_account(client: &Web3<Http>) -> Result<Address> {
         accounts.push((x, balance));
     }
     ensure!(!accounts.is_empty(), "Failed to get root_account");
-    let max = accounts.iter().max_by(|a, b| a.1.cmp(&b.1)).unwrap();
+    let root_account = accounts.iter().max_by(|a, b| a.1.cmp(&b.1)).unwrap();
 
     debug!(
         "Root Account 0x{:x}: {} ETH",
-        max.0,
-        max.1 / U256::exp10(18)
+        root_account.0,
+        root_account.1 / U256::exp10(18)
     );
+    unlock(&client, root_account.0).await?;
 
-    Ok(max.0)
+    Ok(root_account.0)
 }
 
 pub(crate) async fn unlock(client: &Web3<Http>, account: Address) -> Result<()> {

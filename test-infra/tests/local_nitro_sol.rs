@@ -79,8 +79,6 @@ async fn create_new_account() -> Result<()> {
     let client = Web3::new(Http::new(&eth_http())?);
 
     let root_account_address = root_account(&client).await?;
-    unlock(&client, root_account_address).await?;
-
     new_account(&client, root_account_address).await?;
 
     Ok(())

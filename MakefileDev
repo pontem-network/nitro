@@ -7,5 +7,8 @@ docker-compose__up:
 docker-compose__down:
 	cd nitro-testnode; docker-compose down
 
+docker-compose__sh:
+	cd nitro-testnode; docker-compose run --entrypoint sh geth -
+
 docker-compose__address:
 	docker-compose run scripts print-address
