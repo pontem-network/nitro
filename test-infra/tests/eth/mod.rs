@@ -51,7 +51,7 @@ pub(crate) async fn new_account(
     let new_private_key = generate_private_key();
     let new_account_address = client
         .personal()
-        .import_raw_key(&new_private_key, "")
+        .import_raw_key(&new_private_key, L1PASSPHRASE)
         .await?;
     debug!("An account has been created: 0x{new_account_address:x}");
 
@@ -72,6 +72,7 @@ pub(crate) async fn new_account(
         "Fund new account 0x{new_account_address:x}: {} ETH",
         coins / U256::exp10(18)
     );
+    unlock(client, new_account_address).await?;
 
     Ok((new_account_address, new_private_key))
 }

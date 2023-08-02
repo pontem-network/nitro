@@ -1,6 +1,9 @@
 test__local_nitro_sol:
 	RUST_LOG=debug cargo test -p test-infra --features testing_local_nitro_sol
 
+test__:
+	RUST_LOG=debug cargo test -p test-infra --features testing_local_nitro_sol -- node_eth::deploy_contract --nocapture
+
 docker-compose__up:
 	cd nitro-testnode; ./test-node.bash --dev
 

@@ -28,7 +28,11 @@
 
 use anyhow::Result;
 use mimicaw::{Args, Test};
+use std::path::{Path, PathBuf};
+use std::str::FromStr;
+use std::time::Duration;
 use tokio::task;
+use web3::contract::Options;
 use web3::transports::Http;
 use web3::Web3;
 
@@ -42,6 +46,7 @@ mod tmpdir;
 
 use crate::eth::{new_account, root_account, unlock};
 use crate::mimicaw_helper::TestHandleResultToOutcom;
+use crate::sol::{build_sol, SolContract};
 use crate::tmpdir::TmpDir;
 
 const L1_ADDRESS: &str = "0x3f1Eae7D46d88F08fc2F8ed27FCb2AB183EB2d0E";
@@ -92,8 +97,36 @@ async fn create_new_account() -> Result<()> {
 }
 
 async fn deploy_contract() -> Result<()> {
-    let dir = TmpDir::new()?;
-    dbg!(&dir);
+    let contract_sol = SolContract::try_from_path("./tests/sol_sources/const_fn.sol").await?;
 
-    todo!()
+    let client = Web3::new(Http::new(&eth_http())?);
+
+    let root_account_address = root_account(&client).await?;
+    let (alice_address, alice_key) = new_account(&client, root_account_address).await?;
+
+    let web3_contract =
+        web3::contract::Contract::deploy(client.eth(), contract_sol.abi_str().as_bytes())?
+            .confirmations(1)
+            .poll_interval(Duration::from_secs(1))
+            .options(Options::with(|opt| opt.gas = Some(3_000_000.into())))
+            .execute(contract_sol.bin_hex(), (), alice_address)
+            .await?;
+    let contract_address = web3_contract.address();
+    println!("Deployed at: 0x{contract_address:x}");
+
+    //
+    let result: u64 = web3_contract
+        .query("const_fn_10", (), None, Options::default(), None)
+        .await?;
+    assert_eq!(result, 10);
+
+    //
+    let contract =
+        web3::contract::Contract::new(client.eth(), contract_address, contract_sol.abi()?);
+    let result: bool = web3_contract
+        .query("const_fn_true", (), None, Options::default(), None)
+        .await?;
+    assert!(result);
+
+    Ok(())
 }
